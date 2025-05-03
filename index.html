@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HZEDG8KFX4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HZEDG8KFX4');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>学霸数学速算小游戏</title>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(calc(100vh + 50px)) rotate(360deg); }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.9); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        body {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            background-color: #FFF5E6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><g transform="translate(0,0)"><path d="M50,100 Q70,80 90,100 T130,100" fill="none" stroke="black" stroke-width="2"/><path d="M130,100 Q150,80 170,100 T210,100" fill="none" stroke="black" stroke-width="2"/><path d="M210,100 Q230,80 250,100 T290,100" fill="none" stroke="black" stroke-width="2"/><path d="M290,100 Q310,80 330,100" fill="none" stroke="black" stroke-width="2"/><circle cx="60" cy="90" r="15" fill="white" stroke="black" stroke-width="2"/><circle cx="90" cy="90" r="15" fill="white" stroke="black" stroke-width="2"/><circle cx="140" cy="90" r="15" fill="white" stroke="orange" stroke-width="2"/><circle cx="170" cy="90" r="15" fill="white" stroke="orange" stroke-width="2"/><circle cx="220" cy="80" r="15" fill="gray" stroke="black" stroke-width="2"/><circle cx="250" cy="80" r="15" fill="gray" stroke="black" stroke-width="2"/><circle cx="300" cy="90" r="15" fill="white" stroke="orange" stroke-width="2"/><circle cx="330" cy="90" r="15" fill="white" stroke="orange" stroke-width="2"/><path d="M50,100 L30,120 L40,130 L60,120 Z" fill="white" stroke="black" stroke-width="2"/><path d="M330,100 L350,120 L340,130 L320,120 Z" fill="white" stroke="orange" stroke-width="2"/></g></svg>');
+            background-size: 400px 300px;
+            background-position: center 70%;
+            background-repeat: no-repeat;
+            text-align: center;
+            padding: 10px;
+            color: #FF6B88;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+        }
+
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 8px 15px rgba(255, 107, 136, 0.2);
+            position: relative;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 214, 102, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            color: #FF6B88;
+            font-size: clamp(1.5em, 5vw, 2em);
+            margin-bottom: 10px;
+            word-break: break-word;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #FF9E7D;
+            margin-bottom: 15px;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+        }
+
+        .player-name {
+            margin-bottom: 15px;
+        }
+
+        .player-name input {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            font-size: 1em;
+            padding: 8px 12px;
+            border: 2px solid #FFD166;
+            border-radius: 15px;
+            text-align: center;
+            color: #4D96FF;
+            width: 60%;
+            max-width: 200px;
+            background-color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s;
+        }
+
+        .player-name input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 214, 102, 0.5);
+            transform: scale(1.05);
+        }
+
+        .problem {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            font-size: clamp(2em, 8vw, 2.5em);
+            margin: 20px 0;
+            color: #6BCB77;
+            word-break: break-word;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            animation: bounce 1s infinite alternate;
+        }
+
+        input {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            font-size: clamp(1.3em, 5vw, 1.5em);
+            padding: 10px 15px;
+            border: 3px solid #FFD166;
+            border-radius: 15px;
+            width: 100px;
+            text-align: center;
+            color: #6BCB77;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+            margin: 0 auto;
+            display: block;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 214, 102, 0.5);
+            transform: scale(1.05);
+        }
+
+        input.correct {
+            border-color: #6BCB77;
+            background-color: rgba(107, 203, 119, 0.2);
+            animation: bounce 0.5s;
+        }
+
+        input.incorrect {
+            border-color: #FF6B88;
+            background-color: rgba(255, 107, 136, 0.2);
+            animation: shake 0.5s;
+        }
+
+        .score {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            font-size: clamp(1.2em, 5vw, 1.5em);
+            margin: 10px 0;
+            color: #4D96FF;
+        }
+
+        .timer {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            font-size: clamp(1.1em, 4vw, 1.3em);
+            color: #FF9E7D;
+            margin: 10px 0;
+        }
+
+        .level {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            font-size: clamp(1.2em, 5vw, 1.5em);
+            color: #4D96FF;
+            margin: 5px 0;
+        }
+
+        .emoji {
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            margin: 0 3px;
+            display: inline-block;
+        }
+
+        .history {
+            margin-top: 20px;
+            border-top: 2px dashed #FFD166;
+            padding-top: 15px;
+        }
+
+        .history h3 {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            color: #FF9E7D;
+            font-size: clamp(1em, 4vw, 1.2em);
+        }
+
+        .history-controls {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .history-btn {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            background-color: #FFD166;
+            border: none;
+            border-radius: 15px;
+            padding: 5px 12px;
+            font-size: clamp(0.7em, 3vw, 0.8em);
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 60px;
+        }
+
+        .history-btn.active {
+            background-color: #FF9E7D;
+            color: white;
+        }
+
+        .history-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .history-list {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            max-height: 150px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 8px;
+            background-color: rgba(255, 249, 240, 0.7);
+            border-radius: 10px;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+        }
+
+        .history-item {
+            margin: 5px 0;
+            padding: 5px;
+            border-bottom: 1px solid #FFE8D6;
+            word-break: break-word;
+        }
+
+        .history-correct {
+            color: #6BCB77;
+        }
+
+        .history-incorrect {
+            color: #FF6B88;
+        }
+
+        .feedback {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            font-size: clamp(1em, 4vw, 1.1em);
+            margin: 10px 0;
+            min-height: 20px;
+            word-break: break-word;
+        }
+
+        .feedback.correct {
+            color: #6BCB77;
+            animation: bounce 0.5s;
+        }
+
+        .feedback.incorrect {
+            color: #FF6B88;
+            animation: shake 0.5s;
+        }
+
+        .summary {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            background-color: rgba(255, 249, 240, 0.8);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .summary h3 {
+            color: #FF9E7D;
+            margin-top: 0;
+            font-size: clamp(1em, 4vw, 1.2em);
+        }
+
+        .player-summary {
+            font-size: clamp(1em, 4vw, 1.2em);
+            color: #4D96FF;
+            margin-bottom: 10px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: clamp(0.9em, 3vw, 1em);
+        }
+
+        .operation-selector {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .operation-btn {
+            font-family: "KaiTi", "楷体", "STKaiti", serif;
+            background-color: #4D96FF;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 8px 15px;
+            font-size: clamp(0.8em, 3vw, 0.9em);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .operation-btn.active {
+            background-color: #FF6B88;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(255, 107, 136, 0.3);
+        }
+
+        .operation-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .music-control {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: clamp(1.2em, 4vw, 1.5em);
+            cursor: pointer;
+            color: #FF9E7D;
+            transition: all 0.3s;
+        }
+
+        .music-control:hover {
+            transform: scale(1.2);
+        }
+
+        .cat-celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .cat-celebration span {
+            position: absolute;
+            font-size: 24px;
+            animation: fall linear forwards;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 320px) {
+            .player-name input {
+                width: 80%;
+            }
+            
+            input {
+                width: 80px;
+            }
+            
+            .operation-btn {
+                padding: 6px 10px;
+            }
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            body {
+                -webkit-text-size-adjust: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <button class="music-control" id="music-toggle">🔊</button>
+    <h1>学霸数学速算小游戏 <span class="emoji">✨</span></h1>
+    <p class="subtitle">选择题目类型，输入答案后自动检查对错</p>
+    
+    <div class="player-name">
+        <input type="text" id="player-name" placeholder="输入你的名字" maxlength="10">
+    </div>
+
+    <div class="operation-selector">
+        <button class="operation-btn active" data-operation="add">加法➕</button>
+        <button class="operation-btn" data-operation="subtract">减法➖</button>
+        <button class="operation-btn" data-operation="multiply">乘法✖️</button>
+        <button class="operation-btn" data-operation="divide">除法➗</button>
+        <button class="operation-btn" data-operation="random">随机🎲</button>
+    </div>
+
+    <div class="timer" id="timer">用时: 0秒</div>
+    <div class="level" id="level">关卡: 1/20</div>
+    
+    <div class="score" id="score">得分: 0</div>
+
+    <div class="problem" id="problem">5 × 3 = ?</div>
+
+    <input type="number" id="answer" placeholder="答案" autofocus>
+    <div class="feedback" id="feedback"></div>
+
+    <div class="summary" id="summary">
+        <h3>答题总结 <span class="emoji">📊</span></h3>
+        <div class="player-summary" id="player-summary">小玩家的成绩</div>
+        <div class="summary-item">
+            <span>总答题数:</span>
+            <span id="total-answers">0</span>
+        </div>
+        <div class="summary-item">
+            <span>正确:</span>
+            <span id="correct-answers">0</span>
+        </div>
+        <div class="summary-item">
+            <span>错误:</span>
+            <span id="wrong-answers">0</span>
+        </div>
+        <div class="summary-item">
+            <span>正确率:</span>
+            <span id="accuracy">0%</span>
+        </div>
+        <div class="summary-item">
+            <span>用时:</span>
+            <span id="total-time">0秒</span>
+        </div>
+    </div>
+
+    <div class="history">
+        <h3>答题历史 <span class="emoji">📝</span></h3>
+        <div class="history-controls">
+            <button class="history-btn active" id="show-all">全部</button>
+            <button class="history-btn" id="show-correct">正确</button>
+            <button class="history-btn" id="show-incorrect">错误</button>
+        </div>
+        <div class="history-list" id="history-list">
+            <p>还没有答题记录哦~</p>
+        </div>
+    </div>
+</div>
+
+<!-- 音频文件 -->
+<audio id="correct-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" preload="auto"></audio>
+<audio id="wrong-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" preload="auto"></audio>
+<audio id="success-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
+<audio id="bg-music" loop src="https://assets.mixkit.co/music/preview/mixkit-happy-children-138.mp3" preload="auto"></audio>
+
+<script>
+    let score = 0;
+    let num1, num2, correctAnswer;
+    let history = [];
+    let isChecking = false;
+    let historyFilter = 'all';
+    let operation = 'multiply';
+    let timeElapsed = 0;
+    let timer;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let gameStarted = false;
+    let playerName = '小玩家';
+    let musicOn = true;
+    let audioContextInitialized = false;
+    let currentLevel = 1;
+    const maxLevel = 20;
+    let usedProblems = [];
+    const maxUsedProblems = 50; // 最大记录题目数
+
+    // 音频元素
+    const correctSound = document.getElementById('correct-sound');
+    const wrongSound = document.getElementById('wrong-sound');
+    const successSound = document.getElementById('success-sound');
+    const bgMusic = document.getElementById('bg-music');
+    bgMusic.volume = 0.4;
+
+    // 初始化游戏
+    function initGame() {
+        score = 0;
+        history = [];
+        correctCount = 0;
+        wrongCount = 0;
+        timeElapsed = 0;
+        gameStarted = false;
+        currentLevel = 1;
+        usedProblems = [];
+        
+        const nameInput = document.getElementById('player-name');
+        playerName = nameInput.value.trim() || '小玩家';
+        document.getElementById('player-summary').textContent = `${playerName}的成绩`;
+        
+        updateHistoryDisplay();
+        updateSummary();
+        document.getElementById('timer').textContent = `用时: ${timeElapsed}秒`;
+        document.getElementById('level').textContent = `关卡: ${currentLevel}/${maxLevel}`;
+        document.getElementById('summary').style.display = 'none';
+        
+        if (timer) clearInterval(timer);
+        
+        initAudioContext();
+    }
+
+    // 生成不重复的题目
+    function generateProblem() {
+        if (!gameStarted) return;
+        
+        isChecking = false;
+        
+        let problemKey;
+        let attempts = 0;
+        const maxAttempts = 100; // 增加最大尝试次数
+        
+        // 如果是随机模式，随机选择一个运算类型
+        let currentOperation = operation;
+        if (operation === 'random') {
+            const operations = ['add', 'subtract', 'multiply', 'divide'];
+            currentOperation = operations[Math.floor(Math.random() * operations.length)];
+        }
+        
+        do {
+            switch (currentOperation) {
+                case 'add':
+                    num1 = Math.floor(Math.random() * 50) + 1;
+                    num2 = Math.floor(Math.random() * 50) + 1;
+                    correctAnswer = num1 + num2;
+                    problemKey = `add:${num1}+${num2}`; // 添加运算类型前缀
+                    break;
+                case 'subtract':
+                    num1 = Math.floor(Math.random() * 50) + 1;
+                    num2 = Math.floor(Math.random() * num1) + 1;
+                    correctAnswer = num1 - num2;
+                    problemKey = `sub:${num1}-${num2}`;
+                    break;
+                case 'multiply':
+                    num1 = Math.floor(Math.random() * 10) + 1;
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    correctAnswer = num1 * num2;
+                    problemKey = `mul:${num1}×${num2}`;
+                    break;
+                case 'divide':
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    correctAnswer = Math.floor(Math.random() * 10) + 1;
+                    num1 = num2 * correctAnswer;
+                    problemKey = `div:${num1}÷${num2}`;
+                    break;
+            }
+            
+            attempts++;
+            if (attempts >= maxAttempts) {
+                // 如果尝试次数过多，清空已用题目记录
+                usedProblems = [];
+                break;
+            }
+        } while (usedProblems.includes(problemKey));
+        
+        usedProblems.push(problemKey);
+        
+        // 如果已用题目过多，移除最早的记录
+        if (usedProblems.length > maxUsedProblems) {
+            usedProblems.shift();
+        }
+        
+        // 根据运算类型显示题目
+        switch (currentOperation) {
+            case 'add':
+                document.getElementById('problem').textContent = `${num1} + ${num2} = ?`;
+                break;
+            case 'subtract':
+                document.getElementById('problem').textContent = `${num1} - ${num2} = ?`;
+                break;
+            case 'multiply':
+                document.getElementById('problem').textContent = `${num1} × ${num2} = ?`;
+                break;
+            case 'divide':
+                document.getElementById('problem').textContent = `${num1} ÷ ${num2} = ?`;
+                break;
+        }
+
+        const answerInput = document.getElementById('answer');
+        answerInput.value = '';
+        answerInput.className = '';
+        answerInput.focus();
+        answerInput.disabled = false;
+
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('feedback').className = 'feedback';
+    }
+
+    // 切换音乐
+    function toggleMusic() {
+        musicOn = !musicOn;
+        document.getElementById('music-toggle').textContent = musicOn ? '🔊' : '🔇';
+        
+        if (musicOn) {
+            playAudio(bgMusic);
+        } else {
+            bgMusic.pause();
+        }
+    }
+
+    // 开始游戏
+    function startGame() {
+        if (gameStarted) return;
+        
+        gameStarted = true;
+        playAudio(bgMusic);
+        generateProblem();
+        
+        timer = setInterval(() => {
+            timeElapsed++;
+            document.getElementById('timer').textContent = `用时: ${timeElapsed}秒`;
+        }, 1000);
+    }
+
+    // 结束游戏
+    function endGame(isWin) {
+        clearInterval(timer);
+        document.getElementById('answer').disabled = true;
+        document.getElementById('summary').style.display = 'block';
+        document.getElementById('player-summary').textContent = `${playerName}的成绩`;
+        document.getElementById('total-time').textContent = `${timeElapsed}秒`;
+        updateSummary();
+        bgMusic.pause();
+        
+        if (isWin) {
+            playAudio(successSound);
+            createCatCelebration();
+        }
+    }
+
+    // 创建猫咪庆祝效果
+    function createCatCelebration() {
+        const celebration = document.createElement('div');
+        celebration.className = 'cat-celebration';
+        document.body.appendChild(celebration);
+
+        const cats = ['😺', '😸', '😹', '😻', '🙀', '🐱', '🐈'];
+        
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                const cat = document.createElement('span');
+                cat.textContent = cats[Math.floor(Math.random() * cats.length)];
+                cat.style.fontSize = (Math.random() * 20 + 24) + 'px';
+                cat.style.left = Math.random() * 100 + '%';
+                cat.style.top = '-50px';
+                cat.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                celebration.appendChild(cat);
+
+                setTimeout(() => cat.remove(), 3000);
+            }, i * 150);
+        }
+
+        setTimeout(() => celebration.remove(), 3000);
+    }
+
+    // 检查答案
+    function checkAnswer() {
+        if (isChecking || !gameStarted) return;
+
+        const userAnswer = parseInt(document.getElementById('answer').value);
+        if (isNaN(userAnswer)) return;
+
+        isChecking = true;
+        const answerInput = document.getElementById('answer');
+        const feedback = document.getElementById('feedback');
+
+        if (userAnswer === correctAnswer) {
+            answerInput.className = 'correct';
+            feedback.textContent = `正确！${num1} ${getOperationSymbol()} ${num2} = ${correctAnswer} 🎉`;
+            feedback.className = 'feedback correct';
+            score++;
+            correctCount++;
+
+            playAudio(correctSound);
+
+            addHistory(true, userAnswer);
+
+            // 检查是否通过当前关卡
+            currentLevel++;
+            document.getElementById('level').textContent = `关卡: ${currentLevel}/${maxLevel}`;
+            
+            if (currentLevel > maxLevel) {
+                // 通关所有关卡
+                setTimeout(() => {
+                    endGame(true);
+                }, 500);
+                return;
+            }
+
+            setTimeout(() => {
+                generateProblem();
+                isChecking = false;
+            }, 1000);
+        } else {
+            answerInput.className = 'incorrect';
+            feedback.textContent = `不对哦！${num1} ${getOperationSymbol()} ${num2} 不等于 ${userAnswer}`;
+            feedback.className = 'feedback incorrect';
+            wrongCount++;
+
+            playAudio(wrongSound);
+
+            addHistory(false, userAnswer);
+
+            isChecking = false;
+        }
+
+        updateSummary();
+    }
+
+    // 获取运算符号
+    function getOperationSymbol() {
+        switch (operation) {
+            case 'add': return '+';
+            case 'subtract': return '-';
+            case 'multiply': return '×';
+            case 'divide': return '÷';
+            case 'random': return '?';
+            default: return '×';
+        }
+    }
+
+    // 初始化音频上下文
+    function initAudioContext() {
+        if (audioContextInitialized) return;
+        
+        try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                const audioContext = new AudioContext();
+                if (audioContext.state === 'suspended') {
+                    document.body.addEventListener('click', () => audioContext.resume(), { once: true });
+                }
+            }
+            
+            [correctSound, wrongSound, successSound, bgMusic].forEach(audio => {
+                audio.load().catch(e => console.log('音频预加载失败:', e.name));
+            });
+            
+            audioContextInitialized = true;
+        } catch (e) {
+            console.log('音频上下文初始化失败:', e);
+        }
+    }
+
+    // 播放音频
+    function playAudio(audioElement) {
+        if (!musicOn) return;
+        
+        try {
+            audioElement.currentTime = 0;
+            const playPromise = audioElement.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    console.log('自动播放被阻止，等待用户交互');
+                    document.body.addEventListener('click', () => {
+                        audioElement.play().catch(e => console.log('重试播放失败:', e));
+                    }, { once: true });
+                });
+            }
+        } catch (e) {
+            console.log('播放失败:', e);
+        }
+    }
+
+    // 更新答题历史
+    function addHistory(isCorrect, userAnswer) {
+        let operationSymbol;
+        switch (operation) {
+            case 'add': operationSymbol = '+'; break;
+            case 'subtract': operationSymbol = '-'; break;
+            case 'multiply': operationSymbol = '×'; break;
+            case 'divide': operationSymbol = '÷'; break;
+            case 'random': operationSymbol = '?'; break;
+        }
+
+        const historyItem = {
+            problem: `${num1} ${operationSymbol} ${num2}`,
+            answer: correctAnswer,
+            userAnswer: userAnswer,
+            isCorrect: isCorrect,
+            time: new Date().toLocaleTimeString()
+        };
+
+        history.unshift(historyItem);
+        if (history.length > 10) history.pop();
+        updateHistoryDisplay();
+    }
+
+    // 更新答题历史显示
+    function updateHistoryDisplay() {
+        const historyList = document.getElementById('history-list');
+        historyList.innerHTML = '';
+
+        if (history.length === 0) {
+            historyList.innerHTML = '<p>还没有答题记录哦~</p>';
+        } else {
+            const filteredHistory = history.filter(item => {
+                if (historyFilter === 'all') return true;
+                if (historyFilter === 'correct') return item.isCorrect;
+                if (historyFilter === 'incorrect') return !item.isCorrect;
+                return true;
+            });
+
+            if (filteredHistory.length === 0) {
+                historyList.innerHTML = `<p>没有${historyFilter === 'correct' ? '正确' : '错误'}的答题记录~</p>`;
+            } else {
+                filteredHistory.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = `history-item ${item.isCorrect ? 'history-correct' : 'history-incorrect'}`;
+                    const icon = item.isCorrect ? '✅' : '❌';
+                    historyItem.innerHTML = `
+                        <strong>${icon} ${item.problem} = ${item.answer}</strong>
+                        <br>
+                        你的答案: ${item.userAnswer} (${item.time})
+                    `;
+                    historyList.appendChild(historyItem);
+                });
+            }
+        }
+    }
+
+    // 设置历史筛选
+    function setHistoryFilter(filter) {
+        historyFilter = filter;
+        updateHistoryDisplay();
+
+        document.getElementById('show-all').classList.remove('active');
+        document.getElementById('show-correct').classList.remove('active');
+        document.getElementById('show-incorrect').classList.remove('active');
+        document.getElementById(`show-${filter}`).classList.add('active');
+    }
+
+    // 设置运算类型
+    function setOperation(op) {
+        operation = op;
+        initGame();
+        
+        document.querySelectorAll('.operation-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.operation-btn[data-operation="${op}"]`).classList.add('active');
+        
+        startGame();
+    }
+
+    // 更新总结
+    function updateSummary() {
+        const total = correctCount + wrongCount;
+        const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+        
+        document.getElementById('total-answers').textContent = total;
+        document.getElementById('correct-answers').textContent = correctCount;
+        document.getElementById('wrong-answers').textContent = wrongCount;
+        document.getElementById('accuracy').textContent = `${accuracy}%`;
+        document.getElementById('score').textContent = `得分: ${score}`;
+    }
+
+    // 事件监听
+    document.getElementById('answer').addEventListener('input', function() {
+        if (this.value.length === String(correctAnswer).length) checkAnswer();
+    });
+
+    document.getElementById('show-all').addEventListener('click', () => setHistoryFilter('all'));
+    document.getElementById('show-correct').addEventListener('click', () => setHistoryFilter('correct'));
+    document.getElementById('show-incorrect').addEventListener('click', () => setHistoryFilter('incorrect'));
+
+    document.querySelectorAll('.operation-btn').forEach(btn => {
+        btn.addEventListener('click', () => setOperation(btn.dataset.operation));
+    });
+
+    document.getElementById('music-toggle').addEventListener('click', toggleMusic);
+
+    document.getElementById('player-name').addEventListener('input', function() {
+        playerName = this.value.trim() || '小玩家';
+        document.getElementById('player-summary').textContent = `${playerName}的成绩`;
+    });
+
+    // 初始设置
+    setOperation('multiply');
+
+    // 点击页面后初始化游戏
+    document.addEventListener('click', function initGameOnFirstClick() {
+        initAudioContext();
+        playAudio(bgMusic);
+        document.removeEventListener('click', initGameOnFirstClick);
+    }, { once: true });
+
+    // 解决iOS键盘问题
+    window.addEventListener('resize', function() {
+        if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+            window.scrollTo(0, 0);
+        }
+    });
+
+    // 禁用双击缩放
+    document.addEventListener('dblclick', function(e) {
+        e.preventDefault();
+    }, { passive: false });
+</script>
+</body>
+</html>
